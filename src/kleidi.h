@@ -11,7 +11,7 @@
 #define VERSION "1.0-pre"
 
 /* gui.c */
-extern MwWidget	  root, window, menu;
+extern MwWidget	  root, window, menu, widgets, logging, opengl;
 extern MwLLPixmap logo_pixmap;
 
 void gui_init(void);
@@ -20,6 +20,9 @@ void gui_confirm_quit(void);
 
 /* gui_version.c */
 void gui_version(void);
+
+/* gui_opengl.c */
+void gui_opengl_loop(void);
 
 /* logo.c */
 extern unsigned char logo[];
