@@ -5,7 +5,7 @@
 
 #include <Mw/Widget/OpenGL.h>
 
-MwWidget   root, window, menu, widgets, logging, opengl;
+MwWidget   root, window, menu, widgets, logging, opengl, status;
 MwMenu	   menu_file_quit;
 MwMenu	   menu_help_version;
 MwLLPixmap logo_pixmap;
@@ -41,14 +41,21 @@ static void gui_window_resize(MwWidget handle, void* user, void* client) {
 		  MwNx, 10 + 256 + 10,
 		  MwNy, mh + 10,
 		  MwNwidth, ww - 10 - 256 - 10 - 10,
-		  MwNheight, wh - mh - 10 - 10 - 128 - 10,
+		  MwNheight, wh - mh - 10 - 10 - 128 - 10 - 24 - 10,
 		  NULL);
 
-	glViewport(0, 0, ww - 10 - 256 - 10 - 10, wh - mh - 10 - 10 - 128 - 10);
+	MwVaApply(status,
+		  MwNx, 10 + 256 + 10,
+		  MwNy, wh - 10 - 128 - 10 - 24,
+		  MwNwidth, ww - 10 - 256 - 10 - 10,
+		  MwNheight, 24,
+		  NULL);
+
+	glViewport(0, 0, ww - 10 - 256 - 10 - 10, wh - mh - 10 - 10 - 128 - 10 - 24 - 10);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, ww - 10 - 256 - 10 - 10, wh - mh - 10 - 10 - 128 - 10, 0, -1, 1);
+	glOrtho(0, ww - 10 - 256 - 10 - 10, wh - mh - 10 - 10 - 128 - 10 - 24 - 10, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -95,6 +102,11 @@ void gui_init(void) {
 				   NULL);
 	logging = MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
 	opengl	= MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
+	status = MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
+		MwNalignment, MwALIGNMENT_BEGINNING,
+		MwNtext, "Welcome to Kleidi GUI Builder",
+		MwNbold, 1,
+	NULL);
 
 	MwOpenGLMakeCurrent(opengl);
 
@@ -124,10 +136,18 @@ void gui_init(void) {
 
 	MwListBoxSetWidth(widgets, 0, 0);
 
+	gui_opengl_init();
+
 	gui_window_resize(window, NULL, NULL);
 }
 
 void gui_loop(void) {
 	MwAddUserHandler(root, MwNtickHandler, gui_root_tick, NULL);
 	MwLoop(root);
+}
+
+void gui_set_status(const char* text){
+	MwVaApply(status,
+		MwNtext, text,
+	NULL);
 }
