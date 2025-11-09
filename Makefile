@@ -7,9 +7,11 @@ LIBS = -lMw
 .PHONY: all clean
 .SUFFIXES: .c .o
 
-OBJS =
+OBJS = src/main.o src/gui.o
 
-./kleidi: $(OBJS)
+all: ./kleidi$(EXEC)
+
+./kleidi$(EXEC): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
 .c.o:
