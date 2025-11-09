@@ -9,10 +9,15 @@
 #include <Mw/Milsko.h>
 
 /* gui.c */
-extern MwWidget root, window;
+extern MwWidget root, window, menu;
 
 void gui_init(void);
 void gui_loop(void);
 void gui_confirm_quit(void);
+void gui_version(void);
+
+/* logo.c */
+extern unsigned char logo[];
+extern unsigned int logo_len;
 
 #endif

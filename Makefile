@@ -7,7 +7,8 @@ LIBS = -lMw
 .PHONY: all clean
 .SUFFIXES: .c .o
 
-OBJS = src/main.o src/gui.o
+OBJS = src/main.o src/gui.o src/logo.o
+OBJS += external/stb_image.o
 
 all: ./kleidi$(EXEC)
 
