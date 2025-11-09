@@ -1,3 +1,4 @@
+/* $Id$ */
 #include "kleidi.h"
 
 unsigned char logo[] = {
