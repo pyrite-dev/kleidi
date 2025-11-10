@@ -39,29 +39,35 @@ static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 	MwLLMouse m = *(MwLLMouse*)client;
 	if(m.button == MwLLMouseLeft) {
-		if(!first_set && strlen(widget_name) == 0) {
-			gui_set_status("Select an widget first");
-			return;
-		}
-		first_set = first_set ? 0 : 1;
-		if(first_set) {
-			first = mouse;
-		} else {
-			widget_t* widget = malloc(sizeof(*widget));
-			strcpy(widget->type, widget_name);
-			widget->rect.x	    = first.x < mouse.x ? first.x : mouse.x;
-			widget->rect.y	    = first.y < mouse.y ? first.y : mouse.y;
-			widget->rect.width  = abs(mouse.x - first.x);
-			widget->rect.height = abs(mouse.y - first.y);
-			widget->children    = NULL;
+		if(gui_mode == MODE_CREATE){
+			if(!first_set && strlen(widget_name) == 0) {
+				gui_set_status("Select an widget first");
+				return;
+			}
+			first_set = first_set ? 0 : 1;
+			if(first_set) {
+				first = mouse;
+			} else {
+				widget_t* widget = malloc(sizeof(*widget));
+				strcpy(widget->type, widget_name);
+				widget->rect.x	    = first.x < mouse.x ? first.x : mouse.x;
+				widget->rect.y	    = first.y < mouse.y ? first.y : mouse.y;
+				widget->rect.width  = abs(mouse.x - first.x);
+				widget->rect.height = abs(mouse.y - first.y);
+				widget->children    = NULL;
+	
+				arrput(rects, widget);
+	
+				gui_set_status("Entered widget selection mode");
 
-			arrput(rects, widget);
-
-			gui_set_status("");
+				gui_mode = MODE_SELECT;
+			}
 		}
 	} else if(m.button == MwLLMouseRight) {
-		first_set = 0;
-		gui_set_status("");
+		if(gui_mode == MODE_CREATE){
+			first_set = 0;
+			gui_set_status("Keeping widget creation mode");
+		}
 	}
 }
 
@@ -83,6 +89,10 @@ static void gui_opengl_draw_widgets(widget_t** rects_list) {
 	if(rects_list == rects) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+}
+
+void gui_opengl_cancel(void){
+	first_set = 0;
 }
 
 void gui_opengl_loop(void) {
