@@ -10,6 +10,7 @@ MwMenu	   menu_file_quit;
 MwMenu	   menu_help_version;
 MwLLPixmap logo_pixmap, select_pixmap, create_pixmap;
 char	   widget_name[64];
+int gui_mode;
 
 static void gui_root_tick(MwWidget handle, void* user, void* client) {
 	gui_opengl_loop();
@@ -126,9 +127,24 @@ static void gui_widgets_activate(MwWidget handle, void* user, void* client) {
 
 	strcpy(widget_name, MwListBoxGet(widgets, n));
 
-	sprintf(str, "Selected %s widget", widget_name);
+	sprintf(str, "Selected %s widget%s", widget_name, gui_mode == MODE_CREATE ? "" : ", entered widget creation mode");
 
 	gui_set_status(str);
+
+	gui_mode = MODE_CREATE;
+}
+
+static void gui_controls_select_activate(MwWidget handle, void* user, void* client) {
+	gui_set_status("Entered widget selection mode");
+
+	gui_mode = MODE_SELECT;
+	gui_opengl_cancel();
+}
+
+static void gui_controls_create_activate(MwWidget handle, void* user, void* client) {
+	gui_set_status("Entered widget creation mode");
+
+	gui_mode = MODE_CREATE;
 }
 
 void gui_init(void) {
@@ -154,6 +170,8 @@ void gui_init(void) {
 	       "Viewport",
 	       "Window",
 	       NULL};
+
+	gui_mode = MODE_SELECT;
 
 	memset(widget_name, 0, 64);
 
@@ -204,6 +222,8 @@ void gui_init(void) {
 	MwAddUserHandler(window, MwNcloseHandler, gui_window_close, NULL);
 	MwAddUserHandler(menu, MwNmenuHandler, gui_menu_menu, NULL);
 	MwAddUserHandler(widgets, MwNactivateHandler, gui_widgets_activate, NULL);
+	MwAddUserHandler(controls_select, MwNactivateHandler, gui_controls_select_activate, NULL);
+	MwAddUserHandler(controls_create, MwNactivateHandler, gui_controls_create_activate, NULL);
 
 	p     = MwListBoxCreatePacket();
 	index = MwListBoxPacketInsert(p, -1);

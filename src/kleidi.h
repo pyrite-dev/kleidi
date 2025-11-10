@@ -14,6 +14,12 @@
 extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
 extern MwLLPixmap logo_pixmap, select_pixmap, create_pixmap;
 extern char	  widget_name[];
+extern int gui_mode;
+
+enum gui_modes {
+	MODE_SELECT = 0,
+	MODE_CREATE
+};
 
 void gui_init(void);
 void gui_loop(void);
@@ -26,6 +32,7 @@ void gui_version(void);
 /* gui_opengl.c */
 void gui_opengl_loop(void);
 void gui_opengl_init(void);
+void gui_opengl_cancel(void);
 
 /* res_logo.c */
 extern unsigned char res_logo[];
