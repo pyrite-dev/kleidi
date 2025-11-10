@@ -5,10 +5,11 @@
 
 #include <Mw/Widget/OpenGL.h>
 
-MwWidget   root, window, menu, widgets, logging, opengl, status;
+MwWidget   root, window, menu, widgets, logging, opengl, status, controls;
 MwMenu	   menu_file_quit;
 MwMenu	   menu_help_version;
 MwLLPixmap logo_pixmap;
+char	   widget_name[64];
 
 static void gui_root_tick(MwWidget handle, void* user, void* client) {
 	gui_opengl_loop();
@@ -22,40 +23,60 @@ static void gui_window_resize(MwWidget handle, void* user, void* client) {
 	int ww = MwGetInteger(window, MwNwidth);
 	int wh = MwGetInteger(window, MwNheight);
 	int mh = MwGetInteger(menu, MwNheight);
+	int www, wwh;
+	int cww = 256, cwh = 32;
+	int lww, lwh;
+	int sww, swh;
+	int oww, owh;
 
+	www = cww;
+	wwh = wh - mh - 10 - 10 - cwh - 10;
 	MwVaApply(widgets,
 		  MwNx, 10,
 		  MwNy, mh + 10,
-		  MwNwidth, 256,
-		  MwNheight, wh - mh - 20,
+		  MwNwidth, www,
+		  MwNheight, wwh,
 		  NULL);
 
+	MwVaApply(controls,
+		  MwNx, 10,
+		  MwNy, mh + 10 + wwh + 10,
+		  MwNwidth, cww,
+		  MwNheight, cwh,
+		  NULL);
+
+	lww = ww - 10 - www - 10 - 10;
+	lwh = 128;
 	MwVaApply(logging,
-		  MwNx, 10 + 256 + 10,
-		  MwNy, wh - 10 - 128,
-		  MwNwidth, ww - 10 - 256 - 10 - 10,
-		  MwNheight, 128,
+		  MwNx, 10 + www + 10,
+		  MwNy, wh - 10 - lwh,
+		  MwNwidth, lww,
+		  MwNheight, lwh,
 		  NULL);
 
-	MwVaApply(opengl,
-		  MwNx, 10 + 256 + 10,
-		  MwNy, mh + 10,
-		  MwNwidth, ww - 10 - 256 - 10 - 10,
-		  MwNheight, wh - mh - 10 - 10 - 128 - 10 - 24 - 10,
-		  NULL);
-
+	sww = lww;
+	swh = 24;
 	MwVaApply(status,
-		  MwNx, 10 + 256 + 10,
-		  MwNy, wh - 10 - 128 - 10 - 24,
-		  MwNwidth, ww - 10 - 256 - 10 - 10,
-		  MwNheight, 24,
+		  MwNx, 10 + www + 10,
+		  MwNy, wh - 10 - lwh - 10 - swh,
+		  MwNwidth, sww,
+		  MwNheight, swh,
 		  NULL);
 
-	glViewport(0, 0, ww - 10 - 256 - 10 - 10, wh - mh - 10 - 10 - 128 - 10 - 24 - 10);
+	oww = lww;
+	owh = wh - mh - 10 - swh - 10 - lwh - 10;
+	MwVaApply(opengl,
+		  MwNx, 10 + www + 10,
+		  MwNy, mh + 10,
+		  MwNwidth, oww,
+		  MwNheight, owh,
+		  NULL);
+
+	glViewport(0, 0, oww, owh);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, ww - 10 - 256 - 10 - 10, wh - mh - 10 - 10 - 128 - 10 - 24 - 10, 0, -1, 1);
+	glOrtho(0, oww, owh, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -85,28 +106,59 @@ void gui_confirm_quit(void) {
 	MwAddUserHandler(MwMessageBoxGetChild(msg, MwMB_BUTTONNO), MwNactivateHandler, gui_confirm_quit_no, msg);
 }
 
+static void gui_widgets_activate(MwWidget handle, void* user, void* client) {
+	int  n = *(int*)client;
+	char str[64];
+
+	strcpy(widget_name, MwListBoxGet(widgets, n));
+
+	sprintf(str, "Selected %s widget", widget_name);
+
+	gui_set_status(str);
+}
+
 void gui_init(void) {
 	MwMenu	       m;
 	int	       w, h, ch;
 	unsigned char* data;
 	void*	       p;
 	int	       index;
+	int	       i;
+	const char*    widget_names[] = {
+	       "Button",
+	       "CheckBox",
+	       "Entry",
+	       "Frame",
+	       "Image",
+	       "Label",
+	       "ListBox",
+	       "Menu",
+	       "NumberEntry",
+	       "ProgressBar",
+	       "RadioBox",
+	       "ScrollBar",
+	       "Viewport",
+	       "Window",
+	       NULL};
 
-	root	= MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
-	window	= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 1024, 768,
-				   MwNtitle, "Kleidi GUI Builder",
-				   NULL);
-	menu	= MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
-	widgets = MwVaCreateWidget(MwListBoxClass, "widgets", window, 0, 0, 0, 0,
-				   MwNhasHeading, 1,
-				   NULL);
-	logging = MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
-	opengl	= MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
-	status = MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
-		MwNalignment, MwALIGNMENT_BEGINNING,
-		MwNtext, "Welcome to Kleidi GUI Builder",
-		MwNbold, 1,
-	NULL);
+	memset(widget_name, 0, 64);
+
+	root	 = MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
+	window	 = MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 1024, 768,
+				    MwNtitle, "Kleidi GUI Builder",
+				    NULL);
+	menu	 = MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
+	controls = MwCreateWidget(MwFrameClass, "controls", window, 0, 0, 0, 0);
+	widgets	 = MwVaCreateWidget(MwListBoxClass, "widgets", window, 0, 0, 0, 0,
+				    MwNhasHeading, 1,
+				    NULL);
+	logging	 = MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
+	opengl	 = MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
+	status	 = MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
+				    MwNalignment, MwALIGNMENT_BEGINNING,
+				    MwNtext, "Welcome to Kleidi GUI Builder",
+				    MwNbold, 1,
+				    NULL);
 
 	MwOpenGLMakeCurrent(opengl);
 
@@ -127,10 +179,15 @@ void gui_init(void) {
 	MwAddUserHandler(window, MwNresizeHandler, gui_window_resize, NULL);
 	MwAddUserHandler(window, MwNcloseHandler, gui_window_close, NULL);
 	MwAddUserHandler(menu, MwNmenuHandler, gui_menu_menu, NULL);
+	MwAddUserHandler(widgets, MwNactivateHandler, gui_widgets_activate, NULL);
 
 	p     = MwListBoxCreatePacket();
 	index = MwListBoxPacketInsert(p, -1);
 	MwListBoxPacketSet(p, index, 0, "Widget name");
+	for(i = 0; widget_names[i] != NULL; i++) {
+		index = MwListBoxPacketInsert(p, -1);
+		MwListBoxPacketSet(p, index, 0, widget_names[i]);
+	}
 	MwListBoxInsert(widgets, -1, p);
 	MwListBoxDestroyPacket(p);
 
@@ -146,8 +203,8 @@ void gui_loop(void) {
 	MwLoop(root);
 }
 
-void gui_set_status(const char* text){
+void gui_set_status(const char* text) {
 	MwVaApply(status,
-		MwNtext, text,
-	NULL);
+		  MwNtext, text,
+		  NULL);
 }

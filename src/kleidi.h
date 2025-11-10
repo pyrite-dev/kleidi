@@ -11,12 +11,14 @@
 #define VERSION "1.0-pre"
 
 /* gui.c */
-extern MwWidget	  root, window, menu, widgets, logging, opengl, status;
+extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls;
 extern MwLLPixmap logo_pixmap;
+extern char	  widget_name[];
 
 void gui_init(void);
 void gui_loop(void);
 void gui_confirm_quit(void);
+void gui_set_status(const char* text);
 
 /* gui_version.c */
 void gui_version(void);
