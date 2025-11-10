@@ -8,13 +8,13 @@ LIBS = -lMw `pkg-config --libs gl`
 .SUFFIXES: .c .o
 
 OBJS = src/main.o src/gui.o src/gui_version.o src/gui_opengl.o src/math.o
-OBJS += src/logo.o
+OBJS += src/res_logo.o src/res_create.o src/res_select.o
 OBJS += external/stb_image.o external/stb_ds.o
 
 all: ./kleidi$(EXEC)
 
 format:
-	clang-format --verbose -i `find src '(' -name "*.c" -or -name "*.h" ')' -and -not -name "logo.c"`
+	clang-format --verbose -i `find src '(' -name "*.c" -or -name "*.h" ')' -and -not -name "res_*.c"`
 
 ./kleidi$(EXEC): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)

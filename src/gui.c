@@ -5,10 +5,10 @@
 
 #include <Mw/Widget/OpenGL.h>
 
-MwWidget   root, window, menu, widgets, logging, opengl, status, controls;
+MwWidget   root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
 MwMenu	   menu_file_quit;
 MwMenu	   menu_help_version;
-MwLLPixmap logo_pixmap;
+MwLLPixmap logo_pixmap, select_pixmap, create_pixmap;
 char	   widget_name[64];
 
 static void gui_root_tick(MwWidget handle, void* user, void* client) {
@@ -24,7 +24,7 @@ static void gui_window_resize(MwWidget handle, void* user, void* client) {
 	int wh = MwGetInteger(window, MwNheight);
 	int mh = MwGetInteger(menu, MwNheight);
 	int www, wwh;
-	int cww = 256, cwh = 32;
+	int cww = 48 * 4, cwh = 48;
 	int lww, lwh;
 	int sww, swh;
 	int oww, owh;
@@ -42,6 +42,20 @@ static void gui_window_resize(MwWidget handle, void* user, void* client) {
 		  MwNx, 10,
 		  MwNy, mh + 10 + wwh + 10,
 		  MwNwidth, cww,
+		  MwNheight, cwh,
+		  NULL);
+
+	MwVaApply(controls_select,
+		  MwNx, cwh * 0,
+		  MwNy, 0,
+		  MwNwidth, cwh,
+		  MwNheight, cwh,
+		  NULL);
+
+	MwVaApply(controls_create,
+		  MwNx, cwh * 1,
+		  MwNy, 0,
+		  MwNwidth, cwh,
 		  MwNheight, cwh,
 		  NULL);
 
@@ -143,22 +157,24 @@ void gui_init(void) {
 
 	memset(widget_name, 0, 64);
 
-	root	 = MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
-	window	 = MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 1024, 768,
-				    MwNtitle, "Kleidi GUI Builder",
-				    NULL);
-	menu	 = MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
-	controls = MwCreateWidget(MwFrameClass, "controls", window, 0, 0, 0, 0);
-	widgets	 = MwVaCreateWidget(MwListBoxClass, "widgets", window, 0, 0, 0, 0,
-				    MwNhasHeading, 1,
-				    NULL);
-	logging	 = MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
-	opengl	 = MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
-	status	 = MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
-				    MwNalignment, MwALIGNMENT_BEGINNING,
-				    MwNtext, "Welcome to Kleidi GUI Builder",
-				    MwNbold, 1,
-				    NULL);
+	root		= MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
+	window		= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 1024, 768,
+					   MwNtitle, "Kleidi GUI Builder",
+					   NULL);
+	menu		= MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
+	controls	= MwCreateWidget(MwFrameClass, "controls", window, 0, 0, 0, 0);
+	controls_select = MwCreateWidget(MwButtonClass, "select", controls, 0, 0, 0, 0);
+	controls_create = MwCreateWidget(MwButtonClass, "create", controls, 0, 0, 0, 0);
+	widgets		= MwVaCreateWidget(MwListBoxClass, "widgets", window, 0, 0, 0, 0,
+					   MwNhasHeading, 1,
+					   NULL);
+	logging		= MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
+	opengl		= MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
+	status		= MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
+					   MwNalignment, MwALIGNMENT_BEGINNING,
+					   MwNtext, "Welcome to Kleidi GUI Builder",
+					   MwNbold, 1,
+					   NULL);
 
 	MwOpenGLMakeCurrent(opengl);
 
@@ -168,8 +184,16 @@ void gui_init(void) {
 	m		  = MwMenuAdd(menu, NULL, "?Help");
 	menu_help_version = MwMenuAdd(menu, m, "Version");
 
-	data	    = stbi_load_from_memory(logo, logo_len, &w, &h, &ch, 4);
+	data	    = stbi_load_from_memory(res_logo, res_logo_len, &w, &h, &ch, 4);
 	logo_pixmap = MwLoadRaw(window, data, w, h);
+	free(data);
+
+	data	      = stbi_load_from_memory(res_select, res_select_len, &w, &h, &ch, 4);
+	select_pixmap = MwLoadRaw(window, data, w, h);
+	free(data);
+
+	data	      = stbi_load_from_memory(res_create, res_create_len, &w, &h, &ch, 4);
+	create_pixmap = MwLoadRaw(window, data, w, h);
 	free(data);
 
 	MwVaApply(window,
@@ -194,6 +218,14 @@ void gui_init(void) {
 	MwListBoxSetWidth(widgets, 0, 0);
 
 	gui_opengl_init();
+
+	MwVaApply(controls_select,
+		  MwNpixmap, select_pixmap,
+		  NULL);
+
+	MwVaApply(controls_create,
+		  MwNpixmap, create_pixmap,
+		  NULL);
 
 	gui_window_resize(window, NULL, NULL);
 }

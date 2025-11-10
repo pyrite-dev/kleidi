@@ -11,8 +11,8 @@
 #define VERSION "1.0-pre"
 
 /* gui.c */
-extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls;
-extern MwLLPixmap logo_pixmap;
+extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
+extern MwLLPixmap logo_pixmap, select_pixmap, create_pixmap;
 extern char	  widget_name[];
 
 void gui_init(void);
@@ -27,9 +27,17 @@ void gui_version(void);
 void gui_opengl_loop(void);
 void gui_opengl_init(void);
 
-/* logo.c */
-extern unsigned char logo[];
-extern unsigned int  logo_len;
+/* res_logo.c */
+extern unsigned char res_logo[];
+extern unsigned int  res_logo_len;
+
+/* res_select.c */
+extern unsigned char res_select[];
+extern unsigned int  res_select_len;
+
+/* res_create.c */
+extern unsigned char res_create[];
+extern unsigned int  res_create_len;
 
 /* math.c */
 double k_round(double v);
