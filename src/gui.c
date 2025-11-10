@@ -176,7 +176,7 @@ void gui_init(void) {
 	memset(widget_name, 0, 64);
 
 	root		= MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
-	window		= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 1024, 768,
+	window		= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 800, 600,
 					   MwNtitle, "Kleidi GUI Builder",
 					   NULL);
 	menu		= MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
