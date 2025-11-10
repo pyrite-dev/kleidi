@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -I./milsko/include `pkg-config --cflags gl`
 LDFLAGS = -L./milsko/lib -Wl,-R./milsko/lib
-LIBS = -lMw `pkg-config --libs gl`
+LIBS = -lMw `pkg-config --libs gl` -lm
 
 .PHONY: all format clean
 .SUFFIXES: .c .o
