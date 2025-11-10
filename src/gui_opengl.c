@@ -16,6 +16,7 @@ static MwPoint	  mouse;
 static MwPoint	  first;
 static int	  first_set = 0;
 static widget_t** rects	    = NULL;
+static widget_t* selected = NULL;
 
 static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 	double x;
@@ -138,8 +139,6 @@ void gui_opengl_loop(void) {
 		glBegin(GL_LINES);
 		glVertex2f(first.x, first.y);
 		glVertex2f(first.x, mouse.y);
-		glEnd();
-		glBegin(GL_LINES);
 		glVertex2f(first.x, first.y);
 		glVertex2f(mouse.x, first.y);
 		glEnd();
