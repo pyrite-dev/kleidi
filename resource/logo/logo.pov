@@ -82,7 +82,7 @@ object {
 	}
 	finish {
 		phong 1.0
-		reflection 0.1
+		reflection 0.05
 	}
 }
 
