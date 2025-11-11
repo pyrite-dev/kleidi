@@ -10,7 +10,7 @@
 
 #define VERSION "1.0-pre"
 
-/* gui.c */
+/* gui/master.c */
 extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
 extern MwLLPixmap logo_pixmap;
 extern char	  widget_name[];
@@ -26,17 +26,20 @@ void gui_loop(void);
 void gui_confirm_quit(void);
 void gui_set_status(const char* text);
 
-/* gui_version.c */
-void gui_version(void);
+/* gui/options.c */
+void gui/options(void);
 
-/* gui_opengl.c */
+/* gui/version.c */
+void gui/version(void);
+
+/* gui/opengl.c */
 void gui_opengl_loop(void);
 void gui_opengl_init(void);
 void gui_opengl_cancel(void);
 void gui_opengl_set_grid(int size);
 int  gui_opengl_get_grid(void);
 
-/* res_logo.c */
+/* resource/logo.c */
 extern unsigned char res_logo[];
 extern unsigned int  res_logo_len;
 

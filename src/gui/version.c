@@ -1,5 +1,5 @@
 /* $Id$ */
-#include "kleidi.h"
+#include "../kleidi.h"
 
 static void gui_version_close(MwWidget handle, void* user, void* client) {
 	MwDestroyWidget(user);
