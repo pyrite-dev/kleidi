@@ -2,6 +2,6 @@
 #ifndef __FONT8X8_H__
 #define __FONT8X8_H__
 
-extern char font8x8_basic[128][8];
+extern unsigned char font8x8_basic[128][8];
 
 #endif
