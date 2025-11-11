@@ -14,7 +14,7 @@
 extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
 extern MwLLPixmap logo_pixmap;
 extern char	  widget_name[];
-extern int	  gui_mode;
+extern int	  gui_mode, gui_width, gui_height;
 
 enum gui_modes {
 	MODE_SELECT = 0,
