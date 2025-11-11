@@ -27,10 +27,10 @@ void gui_confirm_quit(void);
 void gui_set_status(const char* text);
 
 /* gui/options.c */
-void gui/options(void);
+void gui_options(void);
 
 /* gui/version.c */
-void gui/version(void);
+void gui_version(void);
 
 /* gui/opengl.c */
 void gui_opengl_loop(void);
