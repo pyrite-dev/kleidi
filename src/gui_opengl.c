@@ -37,6 +37,19 @@ static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 	}
 }
 
+static void gui_opengl_select(widget_t** rects_list) {
+	int i;
+	if(rects_list == rects) {
+		selected = NULL;
+	}
+	for(i = 0; i < arrlen(rects_list); i++) {
+		if(rects_list[i]->rect.x <= mouse.x && rects_list[i]->rect.y <= mouse.y && mouse.x <= (rects_list[i]->rect.x + rects_list[i]->rect.width) && mouse.y <= (rects_list[i]->rect.y + rects_list[i]->rect.height)) {
+			selected = rects_list[i];
+		}
+		gui_opengl_select(rects_list[i]->children);
+	}
+}
+
 static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 	MwLLMouse m = *(MwLLMouse*)client;
 	if(m.button == MwLLMouseLeft) {
@@ -81,6 +94,8 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 					gui_mode = MODE_SELECT;
 				}
 			}
+		} else if(gui_mode == MODE_SELECT) {
+			gui_opengl_select(rects);
 		}
 	} else if(m.button == MwLLMouseRight) {
 		if(gui_mode == MODE_CREATE) {
@@ -93,7 +108,7 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 }
 
 static void gui_opengl_draw_widgets(widget_t** rects_list) {
-	int i, j;
+	int i;
 	if(rects_list == rects) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glColor3f(1, 1, 0);
