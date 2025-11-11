@@ -84,7 +84,7 @@ static void gui_menu_menu(MwWidget handle, void* user, void* client) {
 		gui_opengl_set_grid(gui_opengl_get_grid() * 2);
 	} else if(client == menu_view_smaller_grid) {
 		gui_opengl_set_grid(gui_opengl_get_grid() / 2);
-	}else if(client == menu_tools_options){
+	} else if(client == menu_tools_options) {
 		gui_options();
 	} else if(client == menu_help_version) {
 		gui_version();
@@ -189,7 +189,7 @@ void gui_init(void) {
 	menu_view_bigger_grid  = MwMenuAdd(menu, m, "x2 Bigger grid");
 	menu_view_smaller_grid = MwMenuAdd(menu, m, "x2 Smaller grid");
 
-	m = MwMenuAdd(menu, NULL, "Tools");
+	m		   = MwMenuAdd(menu, NULL, "Tools");
 	menu_tools_options = MwMenuAdd(menu, m, "Options");
 
 	m		  = MwMenuAdd(menu, NULL, "?Help");
