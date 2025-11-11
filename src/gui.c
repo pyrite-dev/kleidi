@@ -6,11 +6,11 @@
 #include <Mw/Widget/OpenGL.h>
 
 MwWidget   root, window, menu, widgets, logging, opengl, status;
-MwMenu	   menu_file_quit;
-MwMenu	   menu_help_version;
 MwLLPixmap logo_pixmap;
 char	   widget_name[64];
-int	   gui_mode;
+int	   gui_mode, gui_width, gui_height;
+static MwMenu	   menu_file_quit;
+static MwMenu	   menu_help_version;
 
 static void gui_root_tick(MwWidget handle, void* user, void* client) {
 	gui_opengl_loop();
@@ -152,6 +152,9 @@ void gui_init(void) {
 		w = 1024;
 		h = 768;
 	}
+
+	gui_width = w;
+	gui_height = h;
 
 	root	= MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
 	window	= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, w, h,
