@@ -203,6 +203,12 @@ void gui_init(void) {
 	MwListBoxInsert(widgets, -1, p);
 	MwListBoxDestroyPacket(p);
 
+	p     = MwListBoxCreatePacket();
+	index = MwListBoxPacketInsert(p, -1);
+	MwListBoxPacketSet(p, index, 0, "Logs are shown here");
+	MwListBoxInsert(logging, -1, p);
+	MwListBoxDestroyPacket(p);
+
 	MwListBoxSetWidth(widgets, 0, 0);
 
 	gui_opengl_init();
