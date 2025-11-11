@@ -1,3 +1,4 @@
+/* $Id$ */
 #include "kleidi.h"
 
 #include <X11/Xlib.h>
