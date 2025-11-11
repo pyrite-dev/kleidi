@@ -1,7 +1,7 @@
 /* $Id$ */
-#include "kleidi.h"
+#include "../kleidi.h"
 
-#include "../external/stb_ds.h"
+#include "../../external/stb_ds.h"
 
 #include <Mw/Widget/OpenGL.h>
 

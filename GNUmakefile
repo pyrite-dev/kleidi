@@ -17,9 +17,10 @@ endif
 .PHONY: all format clean
 .SUFFIXES: .c .o
 
-OBJS = src/main.o src/gui.o src/gui_version.o src/gui_opengl.o src/math.o
+OBJS = src/main.o src/math.o
+OBJS += src/gui/master.o src/gui/options.o src/gui/version.o src/gui/opengl.o
+OBJS += src/resource/logo.o
 OBJS += src/machdep_$(BACKEND).o
-OBJS += src/res_logo.o
 OBJS += external/stb_image.o external/stb_ds.o external/font8x8.o
 
 all: ./kleidi$(EXEC)
@@ -34,4 +35,4 @@ format:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f ./kleidi ./kleidi.exe src/*.o external/*.o
+	rm -f ./kleidi ./kleidi.exe src/*.o src/*/*.o external/*.o
