@@ -10,6 +10,7 @@ MwLLPixmap    logo_pixmap;
 char	      widget_name[64];
 int	      gui_mode, gui_width, gui_height;
 static MwMenu menu_file_quit;
+static MwMenu menu_view_bigger_grid, menu_view_smaller_grid;
 static MwMenu menu_help_version;
 
 static void gui_root_tick(MwWidget handle, void* user, void* client) {
@@ -78,6 +79,10 @@ static void gui_window_resize(MwWidget handle, void* user, void* client) {
 static void gui_menu_menu(MwWidget handle, void* user, void* client) {
 	if(client == menu_file_quit) {
 		gui_confirm_quit();
+	} else if(client == menu_view_bigger_grid) {
+		gui_opengl_set_grid(gui_opengl_get_grid() * 2);
+	} else if(client == menu_view_smaller_grid) {
+		gui_opengl_set_grid(gui_opengl_get_grid() / 2);
 	} else if(client == menu_help_version) {
 		gui_version();
 	}
@@ -148,7 +153,7 @@ void gui_init(void) {
 	if(sw >= 1280 && sh >= 1024) {
 		w = 1024;
 		h = 768;
-	}else if(sw >= 1024 && sh >= 768) {
+	} else if(sw >= 1024 && sh >= 768) {
 		w = 800;
 		h = 600;
 	}
@@ -177,9 +182,11 @@ void gui_init(void) {
 	m	       = MwMenuAdd(menu, NULL, "File");
 	menu_file_quit = MwMenuAdd(menu, m, "Quit");
 
-	m	       = MwMenuAdd(menu, NULL, "Edit");
+	m = MwMenuAdd(menu, NULL, "Edit");
 
-	m	       = MwMenuAdd(menu, NULL, "View");
+	m		       = MwMenuAdd(menu, NULL, "View");
+	menu_view_bigger_grid  = MwMenuAdd(menu, m, "x2 Bigger grid");
+	menu_view_smaller_grid = MwMenuAdd(menu, m, "x2 Smaller grid");
 
 	m		  = MwMenuAdd(menu, NULL, "?Help");
 	menu_help_version = MwMenuAdd(menu, m, "Version");
