@@ -62,6 +62,11 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 						gui_set_status("Widget cannot be placed outside the parent widget");
 						first_set = 0;
 					}
+				}else{
+					if(strcmp(widget_name, "Window") != 0){
+						gui_set_status("Toplevel widget must be window");
+						first_set = 0;
+					}
 				}
 			} else {
 				widget_t* widget;
