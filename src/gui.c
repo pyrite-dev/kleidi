@@ -10,7 +10,7 @@ MwMenu	   menu_file_quit;
 MwMenu	   menu_help_version;
 MwLLPixmap logo_pixmap;
 char	   widget_name[64];
-int gui_mode;
+int	   gui_mode;
 
 static void gui_root_tick(MwWidget handle, void* user, void* client) {
 	gui_opengl_loop();
@@ -114,7 +114,7 @@ static void gui_widgets_activate(MwWidget handle, void* user, void* client) {
 
 void gui_init(void) {
 	MwMenu	       m;
-	int	       w, h, ch;
+	int	       w, h, sw, sh, ch;
 	unsigned char* data;
 	void*	       p;
 	int	       index;
@@ -140,21 +140,34 @@ void gui_init(void) {
 
 	memset(widget_name, 0, 64);
 
-	root		= MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
-	window		= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, 800, 600,
-					   MwNtitle, "Kleidi GUI Builder",
-					   NULL);
-	menu		= MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
-	widgets		= MwVaCreateWidget(MwListBoxClass, "widgets", window, 0, 0, 0, 0,
-					   MwNhasHeading, 1,
-					   NULL);
-	logging		= MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
-	opengl		= MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
-	status		= MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
-					   MwNalignment, MwALIGNMENT_BEGINNING,
-					   MwNtext, "Welcome to Kleidi GUI Builder",
-					   MwNbold, 1,
-					   NULL);
+	machdep_screen_size(&sw, &sh);
+
+	w = 640;
+	h = 480;
+
+	if(sw >= 1024 && sh >= 768) {
+		w = 800;
+		h = 600;
+	} else if(sw >= 1280 && sh >= 1024) {
+		w = 1024;
+		h = 768;
+	}
+
+	root	= MwCreateWidget(NULL, "root", NULL, 0, 0, 0, 0);
+	window	= MwVaCreateWidget(MwWindowClass, "main", root, MwDEFAULT, MwDEFAULT, w, h,
+				   MwNtitle, "Kleidi GUI Builder",
+				   NULL);
+	menu	= MwCreateWidget(MwMenuClass, "menu", window, 0, 0, 0, 0);
+	widgets = MwVaCreateWidget(MwListBoxClass, "widgets", window, 0, 0, 0, 0,
+				   MwNhasHeading, 1,
+				   NULL);
+	logging = MwCreateWidget(MwListBoxClass, "logging", window, 0, 0, 0, 0);
+	opengl	= MwCreateWidget(MwOpenGLClass, "opengl", window, 0, 0, 0, 0);
+	status	= MwVaCreateWidget(MwLabelClass, "status", window, 0, 0, 0, 0,
+				   MwNalignment, MwALIGNMENT_BEGINNING,
+				   MwNtext, "Welcome to Kleidi GUI Builder",
+				   MwNbold, 1,
+				   NULL);
 
 	MwOpenGLMakeCurrent(opengl);
 
