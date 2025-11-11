@@ -10,7 +10,7 @@ LIBS = -lMw `pkg-config --libs x11 gl` -lm
 OBJS = src/main.o src/gui.o src/gui_version.o src/gui_opengl.o src/math.o
 OBJS += src/machdep_x11.o
 OBJS += src/res_logo.o
-OBJS += external/stb_image.o external/stb_ds.o
+OBJS += external/stb_image.o external/stb_ds.o external/font8x8.o
 
 all: ./kleidi$(EXEC)
 
