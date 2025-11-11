@@ -145,12 +145,12 @@ void gui_init(void) {
 	w = 640;
 	h = 480;
 
-	if(sw >= 1024 && sh >= 768) {
-		w = 800;
-		h = 600;
-	} else if(sw >= 1280 && sh >= 1024) {
+	if(sw >= 1280 && sh >= 1024) {
 		w = 1024;
 		h = 768;
+	}else if(sw >= 1024 && sh >= 768) {
+		w = 800;
+		h = 600;
 	}
 
 	gui_width  = w;
