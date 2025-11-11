@@ -33,6 +33,8 @@ void gui_version(void);
 void gui_opengl_loop(void);
 void gui_opengl_init(void);
 void gui_opengl_cancel(void);
+void gui_opengl_set_grid(int size);
+int  gui_opengl_get_grid(void);
 
 /* res_logo.c */
 extern unsigned char res_logo[];

@@ -12,13 +12,11 @@ struct widget {
 	widget_t** children;
 };
 
-int grid = 16;
-
 static MwPoint	  mouse;
 static MwPoint	  first;
-static int	  first_set = 0;
-static widget_t** rects	    = NULL;
-static widget_t*  selected  = NULL;
+static int	  first_set = 0, grid = 16;
+static widget_t** rects	   = NULL;
+static widget_t*  selected = NULL;
 
 static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 	double x;
@@ -64,8 +62,8 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 						gui_set_status("Widget cannot be placed outside the parent widget");
 						first_set = 0;
 					}
-				}else{
-					if(strcmp(widget_name, "Window") != 0){
+				} else {
+					if(strcmp(widget_name, "Window") != 0) {
 						gui_set_status("Toplevel widget must be window");
 						first_set = 0;
 					}
@@ -201,4 +199,18 @@ void gui_opengl_init(void) {
 
 	MwAddUserHandler(opengl, MwNmouseMoveHandler, gui_opengl_mouse_move, NULL);
 	MwAddUserHandler(opengl, MwNmouseDownHandler, gui_opengl_mouse_down, NULL);
+}
+
+void gui_opengl_set_grid(int size) {
+	char str[32];
+
+	grid = size;
+	if(grid < 2) grid = 2;
+
+	sprintf(str, "Setting grid size to %d", grid);
+	gui_set_status(str);
+}
+
+int gui_opengl_get_grid(void) {
+	return grid;
 }
