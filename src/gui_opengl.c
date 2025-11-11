@@ -12,6 +12,8 @@ struct widget {
 	widget_t** children;
 };
 
+int grid = 16;
+
 static MwPoint	  mouse;
 static MwPoint	  first;
 static int	  first_set = 0;
@@ -25,11 +27,11 @@ static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 
 	mouse = *(MwPoint*)client;
 
-	x = mouse.x / 15.;
-	y = mouse.y / 15.;
+	x = mouse.x / (double)grid;
+	y = mouse.y / (double)grid;
 
-	mouse.x = k_round(x) * 15;
-	mouse.y = k_round(y) * 15;
+	mouse.x = k_round(x) * grid;
+	mouse.y = k_round(y) * grid;
 
 	if(first_set) {
 		sprintf(str, "%dx%d <%s>, Right click to cancel", abs(mouse.x - first.x), abs(mouse.y - first.y), widget_name);
@@ -152,7 +154,7 @@ void gui_opengl_loop(void) {
 
 	gui_opengl_draw_widgets(rects);
 
-	for(y = 0; y < h; y += 15) {
+	for(y = 0; y < h; y += grid) {
 		if(y == mouse.y) {
 			glColor3f(1, 1, 0);
 			glBegin(GL_LINES);
@@ -160,7 +162,7 @@ void gui_opengl_loop(void) {
 			glVertex2f(w, y);
 			glEnd();
 		}
-		for(x = 0; x < w; x += 15) {
+		for(x = 0; x < w; x += grid) {
 			if(x == mouse.x && y == mouse.y) {
 				glColor3f(1, 1, 0);
 				glPointSize(5);
@@ -194,8 +196,8 @@ void gui_opengl_loop(void) {
 }
 
 void gui_opengl_init(void) {
-	mouse.x = -15;
-	mouse.y = -15;
+	mouse.x = -grid;
+	mouse.y = -grid;
 
 	MwAddUserHandler(opengl, MwNmouseMoveHandler, gui_opengl_mouse_move, NULL);
 	MwAddUserHandler(opengl, MwNmouseDownHandler, gui_opengl_mouse_down, NULL);
