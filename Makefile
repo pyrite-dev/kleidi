@@ -8,7 +8,7 @@ LIBS = -lMw `pkg-config --libs gl` -lm
 .SUFFIXES: .c .o
 
 OBJS = src/main.o src/gui.o src/gui_version.o src/gui_opengl.o src/math.o
-OBJS += src/res_logo.o src/res_create.o src/res_select.o
+OBJS += src/res_logo.o
 OBJS += external/stb_image.o external/stb_ds.o
 
 all: ./kleidi$(EXEC)
