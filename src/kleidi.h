@@ -14,7 +14,7 @@
 extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
 extern MwLLPixmap logo_pixmap;
 extern char	  widget_name[];
-extern int gui_mode;
+extern int	  gui_mode;
 
 enum gui_modes {
 	MODE_SELECT = 0,
@@ -40,5 +40,9 @@ extern unsigned int  res_logo_len;
 
 /* math.c */
 double k_round(double v);
+
+/* machdep.c */
+void machdep_init(void);
+void machdep_screen_size(int* width, int* height);
 
 #endif

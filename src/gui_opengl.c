@@ -16,7 +16,7 @@ static MwPoint	  mouse;
 static MwPoint	  first;
 static int	  first_set = 0;
 static widget_t** rects	    = NULL;
-static widget_t* selected = NULL;
+static widget_t*  selected  = NULL;
 
 static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 	double x;
@@ -40,7 +40,7 @@ static void gui_opengl_mouse_move(MwWidget handle, void* user, void* client) {
 static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 	MwLLMouse m = *(MwLLMouse*)client;
 	if(m.button == MwLLMouseLeft) {
-		if(gui_mode == MODE_CREATE){
+		if(gui_mode == MODE_CREATE) {
 			if(!first_set && strlen(widget_name) == 0) {
 				gui_set_status("Select an widget first");
 				return;
@@ -56,17 +56,17 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 				widget->rect.width  = abs(mouse.x - first.x);
 				widget->rect.height = abs(mouse.y - first.y);
 				widget->children    = NULL;
-	
+
 				arrput(rects, widget);
-	
+
 				gui_set_status("");
 
 				gui_mode = MODE_SELECT;
 			}
 		}
 	} else if(m.button == MwLLMouseRight) {
-		if(gui_mode == MODE_CREATE){
-			gui_mode = MODE_SELECT;
+		if(gui_mode == MODE_CREATE) {
+			gui_mode  = MODE_SELECT;
 			first_set = 0;
 		}
 	}
@@ -92,7 +92,7 @@ static void gui_opengl_draw_widgets(widget_t** rects_list) {
 	}
 }
 
-void gui_opengl_cancel(void){
+void gui_opengl_cancel(void) {
 	first_set = 0;
 }
 
