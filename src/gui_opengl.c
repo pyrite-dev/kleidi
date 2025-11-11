@@ -41,33 +41,53 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 	MwLLMouse m = *(MwLLMouse*)client;
 	if(m.button == MwLLMouseLeft) {
 		if(gui_mode == MODE_CREATE) {
-			if(!first_set && strlen(widget_name) == 0) {
-				gui_set_status("Select an widget first");
-				return;
-			}
 			first_set = first_set ? 0 : 1;
 			if(first_set) {
 				first = mouse;
+				if(selected != NULL) {
+					if(first.x < selected->rect.x || first.y < selected->rect.y || first.x > (selected->rect.x + selected->rect.width) || first.y > (selected->rect.y + selected->rect.height)) {
+						gui_set_status("Widget cannot be placed outside the parent widget");
+						first_set = 0;
+					}
+				}
 			} else {
-				widget_t* widget = malloc(sizeof(*widget));
-				strcpy(widget->type, widget_name);
-				widget->rect.x	    = first.x < mouse.x ? first.x : mouse.x;
-				widget->rect.y	    = first.y < mouse.y ? first.y : mouse.y;
-				widget->rect.width  = abs(mouse.x - first.x);
-				widget->rect.height = abs(mouse.y - first.y);
-				widget->children    = NULL;
+				widget_t* widget;
 
-				arrput(rects, widget);
+				if(selected != NULL) {
+					if(mouse.x < selected->rect.x || mouse.y < selected->rect.y || mouse.x > (selected->rect.x + selected->rect.width) || mouse.y > (selected->rect.y + selected->rect.height)) {
+						gui_set_status("Widget cannot be placed outside the parent widget");
+						first_set = 1;
+					}
+				}
 
-				gui_set_status("");
+				if(!first_set) {
+					widget = malloc(sizeof(*widget));
+					strcpy(widget->type, widget_name);
+					widget->rect.x	    = first.x < mouse.x ? first.x : mouse.x;
+					widget->rect.y	    = first.y < mouse.y ? first.y : mouse.y;
+					widget->rect.width  = abs(mouse.x - first.x);
+					widget->rect.height = abs(mouse.y - first.y);
+					widget->children    = NULL;
 
-				gui_mode = MODE_SELECT;
+					if(selected != NULL) {
+						arrput(selected->children, widget);
+					} else {
+						arrput(rects, widget);
+						selected = widget;
+					}
+
+					gui_set_status("");
+
+					gui_mode = MODE_SELECT;
+				}
 			}
 		}
 	} else if(m.button == MwLLMouseRight) {
 		if(gui_mode == MODE_CREATE) {
 			gui_mode  = MODE_SELECT;
 			first_set = 0;
+
+			gui_set_status("Cancelled creating");
 		}
 	}
 }
@@ -79,14 +99,20 @@ static void gui_opengl_draw_widgets(widget_t** rects_list) {
 		glColor3f(1, 1, 0);
 	}
 	for(i = 0; i < arrlen(rects_list); i++) {
+		if(rects_list[i] == selected) {
+			glLineWidth(2);
+		} else {
+			glLineWidth(1);
+		}
 		glBegin(GL_QUADS);
-		glVertex2f(rects[i]->rect.x, rects[i]->rect.y);
-		glVertex2f(rects[i]->rect.x, rects[i]->rect.y + rects[i]->rect.height);
-		glVertex2f(rects[i]->rect.x + rects[i]->rect.width, rects[i]->rect.y + rects[i]->rect.height);
-		glVertex2f(rects[i]->rect.x + rects[i]->rect.width, rects[i]->rect.y);
+		glVertex2f(rects_list[i]->rect.x, rects_list[i]->rect.y);
+		glVertex2f(rects_list[i]->rect.x, rects_list[i]->rect.y + rects_list[i]->rect.height);
+		glVertex2f(rects_list[i]->rect.x + rects_list[i]->rect.width, rects_list[i]->rect.y + rects_list[i]->rect.height);
+		glVertex2f(rects_list[i]->rect.x + rects_list[i]->rect.width, rects_list[i]->rect.y);
 		glEnd();
 		gui_opengl_draw_widgets(rects_list[i]->children);
 	}
+	glLineWidth(1);
 	if(rects_list == rects) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
