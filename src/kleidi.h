@@ -12,7 +12,7 @@
 
 /* gui.c */
 extern MwWidget	  root, window, menu, widgets, logging, opengl, status, controls, controls_select, controls_create;
-extern MwLLPixmap logo_pixmap, select_pixmap, create_pixmap;
+extern MwLLPixmap logo_pixmap;
 extern char	  widget_name[];
 extern int gui_mode;
 
@@ -37,14 +37,6 @@ void gui_opengl_cancel(void);
 /* res_logo.c */
 extern unsigned char res_logo[];
 extern unsigned int  res_logo_len;
-
-/* res_select.c */
-extern unsigned char res_select[];
-extern unsigned int  res_select_len;
-
-/* res_create.c */
-extern unsigned char res_create[];
-extern unsigned int  res_create_len;
 
 /* math.c */
 double k_round(double v);

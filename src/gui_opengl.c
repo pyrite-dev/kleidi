@@ -59,15 +59,15 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 	
 				arrput(rects, widget);
 	
-				gui_set_status("Entered widget selection mode");
+				gui_set_status("");
 
 				gui_mode = MODE_SELECT;
 			}
 		}
 	} else if(m.button == MwLLMouseRight) {
 		if(gui_mode == MODE_CREATE){
+			gui_mode = MODE_SELECT;
 			first_set = 0;
-			gui_set_status("Keeping widget creation mode");
 		}
 	}
 }
