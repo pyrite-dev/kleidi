@@ -177,6 +177,10 @@ void gui_init(void) {
 	m	       = MwMenuAdd(menu, NULL, "File");
 	menu_file_quit = MwMenuAdd(menu, m, "Quit");
 
+	m	       = MwMenuAdd(menu, NULL, "Edit");
+
+	m	       = MwMenuAdd(menu, NULL, "View");
+
 	m		  = MwMenuAdd(menu, NULL, "?Help");
 	menu_help_version = MwMenuAdd(menu, m, "Version");
 
