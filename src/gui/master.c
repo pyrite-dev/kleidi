@@ -144,6 +144,8 @@ void gui_init(void) {
 	       "Window",
 	       NULL};
 
+	MwLibraryInit();
+
 	gui_mode = MODE_SELECT;
 
 	memset(widget_name, 0, 64);
