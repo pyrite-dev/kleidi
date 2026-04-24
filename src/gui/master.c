@@ -124,7 +124,6 @@ void gui_init(void) {
 	MwMenu	       m;
 	int	       w, h, sw, sh, ch;
 	unsigned char* data;
-	void*	       p;
 	int	       index;
 	int	       i;
 	const char*    widget_names[] = {
@@ -210,21 +209,12 @@ void gui_init(void) {
 	MwAddUserHandler(menu, MwNmenuHandler, gui_menu_menu, NULL);
 	MwAddUserHandler(widgets, MwNactivateHandler, gui_widgets_activate, NULL);
 
-	p     = MwListBoxCreatePacket();
-	index = MwListBoxPacketInsert(p, -1);
-	MwListBoxPacketSet(p, index, 0, "Widget name");
+	MwListBoxSet(widgets, -1, 0, "Widget name");
 	for(i = 0; widget_names[i] != NULL; i++) {
-		index = MwListBoxPacketInsert(p, -1);
-		MwListBoxPacketSet(p, index, 0, widget_names[i]);
+		MwListBoxSet(widgets, -1, 0, widget_names[i]);
 	}
-	MwListBoxInsert(widgets, -1, p);
-	MwListBoxDestroyPacket(p);
 
-	p     = MwListBoxCreatePacket();
-	index = MwListBoxPacketInsert(p, -1);
-	MwListBoxPacketSet(p, index, 0, "Logs are shown here");
-	MwListBoxInsert(logging, -1, p);
-	MwListBoxDestroyPacket(p);
+	MwListBoxSet(logging, -1, 0, "Logs are shown here");
 
 	MwListBoxSetWidth(widgets, 0, 0);
 

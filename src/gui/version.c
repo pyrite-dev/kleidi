@@ -9,7 +9,7 @@ void gui_version(void) {
 	int	    w = (gui_width < 1000 ? 1000 : gui_width) / 2, h = w / 3;
 	int	    x	    = MwGetInteger(window, MwNx) + (MwGetInteger(window, MwNwidth) - w) / 2;
 	int	    y	    = MwGetInteger(window, MwNy) + (MwGetInteger(window, MwNheight) - h) / 2;
-	int	    t	    = MwTextHeight(window, "M");
+	int	    t	    = MwTextHeight(window, NULL, "M");
 	const char* texts[] = {
 	    "Kleidi GUI Builder",
 	    "Version " VERSION,

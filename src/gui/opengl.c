@@ -51,8 +51,8 @@ static void gui_opengl_select(widget_t** rects_list) {
 }
 
 static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
-	MwLLMouse m = *(MwLLMouse*)client;
-	if(m.button == MwLLMouseLeft) {
+	MwMouse m = *(MwMouse*)client;
+	if(m.button == MwMOUSE_LEFT) {
 		if(gui_mode == MODE_CREATE) {
 			first_set = first_set ? 0 : 1;
 			if(first_set) {
@@ -102,7 +102,7 @@ static void gui_opengl_mouse_down(MwWidget handle, void* user, void* client) {
 		} else if(gui_mode == MODE_SELECT) {
 			gui_opengl_select(rects);
 		}
-	} else if(m.button == MwLLMouseRight) {
+	} else if(m.button == MwMOUSE_RIGHT) {
 		if(gui_mode == MODE_CREATE) {
 			gui_mode  = MODE_SELECT;
 			first_set = 0;
